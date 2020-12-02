@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import chat_pb2 as chat__pb2
+from src.server import chat_pb2 as src_dot_server_dot_chat__pb2
 
 
 class ChatStub(object):
@@ -16,8 +16,8 @@ class ChatStub(object):
         """
         self.connect = channel.unary_unary(
                 '/Chat/connect',
-                request_serializer=chat__pb2.ChatUser.SerializeToString,
-                response_deserializer=chat__pb2.ChatUserConnected.FromString,
+                request_serializer=src_dot_server_dot_chat__pb2.ChatUser.SerializeToString,
+                response_deserializer=src_dot_server_dot_chat__pb2.ChatUserConnected.FromString,
                 )
 
 
@@ -35,8 +35,8 @@ def add_ChatServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'connect': grpc.unary_unary_rpc_method_handler(
                     servicer.connect,
-                    request_deserializer=chat__pb2.ChatUser.FromString,
-                    response_serializer=chat__pb2.ChatUserConnected.SerializeToString,
+                    request_deserializer=src_dot_server_dot_chat__pb2.ChatUser.FromString,
+                    response_serializer=src_dot_server_dot_chat__pb2.ChatUserConnected.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -60,7 +60,7 @@ class Chat(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Chat/connect',
-            chat__pb2.ChatUser.SerializeToString,
-            chat__pb2.ChatUserConnected.FromString,
+            src_dot_server_dot_chat__pb2.ChatUser.SerializeToString,
+            src_dot_server_dot_chat__pb2.ChatUserConnected.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

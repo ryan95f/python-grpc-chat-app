@@ -1,9 +1,10 @@
 import grpc
-import chat_pb2_grpc as chat_pb2_grpc
-from chat_service import ChatService
+import src.server.chat_pb2_grpc as chat_pb2_grpc
+from src.server.chat_service import ChatService
 from concurrent import futures
 
 def main():
+    print("Starting Server")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     chat_pb2_grpc.add_ChatServicer_to_server(ChatService(), server)
     server.add_insecure_port('localhost:50051')

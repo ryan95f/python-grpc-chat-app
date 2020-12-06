@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x15src/server/chat.proto\"\x1c\n\x08\x43hatUser\x12\x10\n\x08username\x18\x01 \x01(\t\"5\n\x11\x43hatUserConnected\x12\x0e\n\x06userId\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t20\n\x04\x43hat\x12(\n\x07\x63onnect\x12\t.ChatUser\x1a\x12.ChatUserConnectedb\x06proto3'
+  serialized_pb=b'\n\x15src/server/chat.proto\"\x1c\n\x08\x43hatUser\x12\x10\n\x08username\x18\x01 \x01(\t\"5\n\x11\x43hatUserConnected\x12\x0e\n\x06userId\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\",\n\x12\x43hatUserDisconnect\x12\x16\n\x0eisDisconnected\x18\x01 \x01(\x08\"@\n\x0b\x43hatMessage\x12\x0e\n\x06userId\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0f\n\x07message\x18\x03 \x01(\t2\x95\x01\n\x04\x43hat\x12(\n\x07\x63onnect\x12\t.ChatUser\x1a\x12.ChatUserConnected\x12\x34\n\ndisconnect\x12\x12.ChatUserConnected\x1a\x12.ChatUserConnected\x12-\n\x0bsendMessage\x12\x0c.ChatMessage\x1a\x0c.ChatMessage(\x01\x30\x01\x62\x06proto3'
 )
 
 
@@ -95,8 +95,88 @@ _CHATUSERCONNECTED = _descriptor.Descriptor(
   serialized_end=108,
 )
 
+
+_CHATUSERDISCONNECT = _descriptor.Descriptor(
+  name='ChatUserDisconnect',
+  full_name='ChatUserDisconnect',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='isDisconnected', full_name='ChatUserDisconnect.isDisconnected', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=110,
+  serialized_end=154,
+)
+
+
+_CHATMESSAGE = _descriptor.Descriptor(
+  name='ChatMessage',
+  full_name='ChatMessage',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='userId', full_name='ChatMessage.userId', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='username', full_name='ChatMessage.username', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='message', full_name='ChatMessage.message', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=156,
+  serialized_end=220,
+)
+
 DESCRIPTOR.message_types_by_name['ChatUser'] = _CHATUSER
 DESCRIPTOR.message_types_by_name['ChatUserConnected'] = _CHATUSERCONNECTED
+DESCRIPTOR.message_types_by_name['ChatUserDisconnect'] = _CHATUSERDISCONNECT
+DESCRIPTOR.message_types_by_name['ChatMessage'] = _CHATMESSAGE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 ChatUser = _reflection.GeneratedProtocolMessageType('ChatUser', (_message.Message,), {
@@ -113,6 +193,20 @@ ChatUserConnected = _reflection.GeneratedProtocolMessageType('ChatUserConnected'
   })
 _sym_db.RegisterMessage(ChatUserConnected)
 
+ChatUserDisconnect = _reflection.GeneratedProtocolMessageType('ChatUserDisconnect', (_message.Message,), {
+  'DESCRIPTOR' : _CHATUSERDISCONNECT,
+  '__module__' : 'src.server.chat_pb2'
+  # @@protoc_insertion_point(class_scope:ChatUserDisconnect)
+  })
+_sym_db.RegisterMessage(ChatUserDisconnect)
+
+ChatMessage = _reflection.GeneratedProtocolMessageType('ChatMessage', (_message.Message,), {
+  'DESCRIPTOR' : _CHATMESSAGE,
+  '__module__' : 'src.server.chat_pb2'
+  # @@protoc_insertion_point(class_scope:ChatMessage)
+  })
+_sym_db.RegisterMessage(ChatMessage)
+
 
 
 _CHAT = _descriptor.ServiceDescriptor(
@@ -122,8 +216,8 @@ _CHAT = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=110,
-  serialized_end=158,
+  serialized_start=223,
+  serialized_end=372,
   methods=[
   _descriptor.MethodDescriptor(
     name='connect',
@@ -132,6 +226,26 @@ _CHAT = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_CHATUSER,
     output_type=_CHATUSERCONNECTED,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='disconnect',
+    full_name='Chat.disconnect',
+    index=1,
+    containing_service=None,
+    input_type=_CHATUSERCONNECTED,
+    output_type=_CHATUSERCONNECTED,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='sendMessage',
+    full_name='Chat.sendMessage',
+    index=2,
+    containing_service=None,
+    input_type=_CHATMESSAGE,
+    output_type=_CHATMESSAGE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

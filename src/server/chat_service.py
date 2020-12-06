@@ -5,7 +5,25 @@ class ChatService(chat_pb2_grpc.ChatServicer):
     def __init__(self):
         super(ChatService, self).__init__()
         self.chats = []
+        self.users = {}
 
     def connect(self, request, context):
-        print(request)
         return chat_pb2.ChatUserConnected(username=request.username, userId=1)
+
+    def disconnect(self, request, context):
+        return chat_pb2.ChatUserConnected(isDisconnected=True)
+
+    def sendMessage(self, request_iterator, context):
+        current_user_id = 0
+        last_seen_message_index = 0
+
+        for incoming_chats in request_iterator:
+            current_user_id = incoming_chats.userId
+            self.chats.append(incoming_chats)
+
+        while True:
+            while len(self.chats) > last_seen_message_index:
+                message = self.chats[last_seen_message_index]
+                last_seen_message_index += 1
+                if message.userId != current_user_id:
+                    yield message

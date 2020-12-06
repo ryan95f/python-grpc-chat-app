@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x15src/server/chat.proto\"\x1c\n\x08\x43hatUser\x12\x10\n\x08username\x18\x01 \x01(\t\"5\n\x11\x43hatUserConnected\x12\x0e\n\x06userId\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\",\n\x12\x43hatUserDisconnect\x12\x16\n\x0eisDisconnected\x18\x01 \x01(\x08\"@\n\x0b\x43hatMessage\x12\x0e\n\x06userId\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0f\n\x07message\x18\x03 \x01(\t2\x95\x01\n\x04\x43hat\x12(\n\x07\x63onnect\x12\t.ChatUser\x1a\x12.ChatUserConnected\x12\x34\n\ndisconnect\x12\x12.ChatUserConnected\x1a\x12.ChatUserConnected\x12-\n\x0bsendMessage\x12\x0c.ChatMessage\x1a\x0c.ChatMessage(\x01\x30\x01\x62\x06proto3'
+  serialized_pb=b'\n\x15src/server/chat.proto\"\x1c\n\x08\x43hatUser\x12\x10\n\x08username\x18\x01 \x01(\t\"5\n\x11\x43hatUserConnected\x12\x0e\n\x06userId\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\",\n\x12\x43hatUserDisconnect\x12\x16\n\x0eisDisconnected\x18\x01 \x01(\x08\"@\n\x0b\x43hatMessage\x12\x0e\n\x06userId\x18\x01 \x01(\x05\x12\x10\n\x08username\x18\x02 \x01(\t\x12\x0f\n\x07message\x18\x03 \x01(\t2\xcd\x01\n\x04\x43hat\x12(\n\x07\x63onnect\x12\t.ChatUser\x1a\x12.ChatUserConnected\x12\x34\n\ndisconnect\x12\x12.ChatUserConnected\x1a\x12.ChatUserConnected\x12,\n\x0bsendMessage\x12\x12.ChatUserConnected\x1a\t.ChatUser\x12\x37\n\x11subscribeMessages\x12\x12.ChatUserConnected\x1a\x0c.ChatMessage0\x01\x62\x06proto3'
 )
 
 
@@ -217,7 +217,7 @@ _CHAT = _descriptor.ServiceDescriptor(
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
   serialized_start=223,
-  serialized_end=372,
+  serialized_end=428,
   methods=[
   _descriptor.MethodDescriptor(
     name='connect',
@@ -244,7 +244,17 @@ _CHAT = _descriptor.ServiceDescriptor(
     full_name='Chat.sendMessage',
     index=2,
     containing_service=None,
-    input_type=_CHATMESSAGE,
+    input_type=_CHATUSERCONNECTED,
+    output_type=_CHATUSER,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='subscribeMessages',
+    full_name='Chat.subscribeMessages',
+    index=3,
+    containing_service=None,
+    input_type=_CHATUSERCONNECTED,
     output_type=_CHATMESSAGE,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,

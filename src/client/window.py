@@ -10,11 +10,9 @@ class Window(tk.Tk):
         super(Window, self).__init__()
         self.title('grpc chat!')
         self.grid()
+        self.stop_threds = False
         self.client = GrpcClient()
         self.__setup_widgets()
-
-
-        # self.setUpWorker()
 
     def __setup_widgets(self):
         self.username_input = tk.Entry(self, width=50)
@@ -40,6 +38,11 @@ class Window(tk.Tk):
         self.message_queue = queue.Queue()
         Thread(target=self.__message_reciever_handler, args=(self.client, self.message_queue, )).start()
 
+        self.protocol("WM_DELETE_WINDOW", self.on_close)
+
+    def on_close(self):
+        self.stop_threds = True
+        self.destroy()
 
     def __connect_client(self):
         username = self.username_input.get()
@@ -50,17 +53,14 @@ class Window(tk.Tk):
         message = self.chat_box.get("1.0",'end-1c')
         self.chat_box.delete('1.0', 'end-1c')
 
-        message_to_send = chat_pb2.ChatMessage(userId=2, username='Ryan', message=message)
-        self.message_queue.put(message_to_send)
+        message_to_send = chat_pb2.ChatMessage(userId=2, username='Ryan', message='Test')
         self.__add_message('Ryan', message)
+        self.client.send_message(message_to_send)
 
     def __add_message(self, username, message):
             self.chat_mesages.insert(self.chat_mesages.size() + 1, '[{}] - {}'.format(username, message))
 
     def __message_reciever_handler(self, client, queue):
-        if not queue.empty():
-            response = client.send_messages([queue.get(0)])
-            print(response)
-            for message in response:
-                print(message)
-                self.__add_message(message.username, message.message)
+        response = client.subscribe_messages(chat_pb2.ChatUserConnected(userId=2, username='Ryan'))
+        for message in response:
+            self.__add_message(message.username, message.message)

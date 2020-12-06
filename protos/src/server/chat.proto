@@ -3,8 +3,10 @@ syntax = "proto3";
 service Chat {
     rpc connect(ChatUser) returns (ChatUserConnected);
     rpc disconnect(ChatUserConnected) returns (ChatUserConnected);
-    rpc sendMessage(stream ChatMessage) returns (stream ChatMessage);
+    rpc sendMessage(ChatUserConnected) returns (ChatUser);
+    rpc subscribeMessages(ChatUserConnected) returns (stream ChatMessage);
 }
+
 
 message ChatUser {
     string username = 1;

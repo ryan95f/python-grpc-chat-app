@@ -13,10 +13,8 @@ class GrpcClient:
         self.is_connected = True
         return r
 
-    def send_messages(self, messages):
-        print(messages)
-        return self.stub.sendMessage(self.__messages_to_iter(messages))
+    def subscribe_messages(self, userDetails):
+        return self.stub.subscribeMessages(userDetails)
 
-    def __messages_to_iter(self, messages):
-        for message in messages:
-            yield message
+    def send_message(self, message):
+        return self.stub.sendMessage(message)

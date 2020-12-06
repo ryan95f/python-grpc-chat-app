@@ -15,19 +15,18 @@ class ChatService(chat_pb2_grpc.ChatServicer):
     def disconnect(self, request, context):
         return chat_pb2.ChatUserConnected(isDisconnected=True)
 
-    def sendMessage(self, request_iterator, context):
-        current_user_id = 0
-        last_seen_message_index = 0
+    def sendMessage(self, request, context):
+        print(request)
+        self.chats.append(request)
+        return chat_pb2.ChatMessage(userId=request.userId, username=request.username)
 
-        for incoming_chats in request_iterator:
-            print(incoming_chats)
-            current_user_id = incoming_chats.userId
-            self.chats.append(incoming_chats)
+    def subscribeMessages(self, request, context):
+        current_user_id = request.userId
+        last_seen_message_index = 0
 
         while not self.stop_thread:
             while len(self.chats) > last_seen_message_index:
                 message = self.chats[last_seen_message_index]
                 last_seen_message_index += 1
                 if message.userId != current_user_id:
-                    print(message)
                     yield message

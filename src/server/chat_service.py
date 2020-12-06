@@ -26,4 +26,5 @@ class ChatService(chat_pb2_grpc.ChatServicer):
                 message = self.chats[last_seen_message_index]
                 last_seen_message_index += 1
                 if message.userId != current_user_id:
+                    print(message)
                     yield message

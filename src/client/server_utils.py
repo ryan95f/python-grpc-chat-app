@@ -12,3 +12,11 @@ class GrpcClient:
         r = self.stub.connect(chat_pb2.ChatUser(username=username))
         self.is_connected = True
         return r
+
+    def send_messages(self, messages):
+        print(messages)
+        return self.stub.sendMessage(self.__messages_to_iter(messages))
+
+    def __messages_to_iter(self, messages):
+        for message in messages:
+            yield message

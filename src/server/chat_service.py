@@ -10,10 +10,13 @@ class ChatService(chat_pb2_grpc.ChatServicer):
         self.stop_thread = False
 
     def connect(self, request, context):
-        return chat_pb2.ChatUserConnected(username=request.username, userId=random.randint(1, 10000))
+        user_id = random.randint(1, 10000)
+        self.users[user_id] = request.username
+        return chat_pb2.ChatUserConnected(username=request.username, userId=user_id)
 
     def disconnect(self, request, context):
-        return chat_pb2.ChatUserConnected(isDisconnected=True)
+        del self.users[request.userId]
+        return chat_pb2.ChatUserDisconnect(isDisconnected=True)
 
     def sendMessage(self, request, context):
         self.chats.append(request)
@@ -23,7 +26,7 @@ class ChatService(chat_pb2_grpc.ChatServicer):
         current_user_id = request.userId
         last_seen_message_index = 0
 
-        while not self.stop_thread:
+        while (not self.stop_thread) and (self.users.get(current_user_id, None) != None):
             while len(self.chats) > last_seen_message_index:
                 message = self.chats[last_seen_message_index]
                 last_seen_message_index += 1

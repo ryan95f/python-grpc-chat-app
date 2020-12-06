@@ -1,18 +1,22 @@
 import tkinter as tk
 from threading import Thread
-from src.client.server_utils import GrpcClient
+from src.client.grpc_client import GrpcClient
+
 import src.server.chat_pb2 as chat_pb2
 import src.server.chat_pb2_grpc as chat_pb2_grpc
-import queue
+
 
 class Window(tk.Tk):
     def __init__(self):
         super(Window, self).__init__()
         self.title('grpc chat!')
         self.grid()
-        self.stop_threds = False
         self.client = GrpcClient()
         self.__setup_widgets()
+
+    def __del__(self):
+        if self.client.is_connected:
+            self.client.disconnect()
 
     def __setup_widgets(self):
         self.username_input = tk.Entry(self, width=50)
@@ -38,14 +42,20 @@ class Window(tk.Tk):
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def on_close(self):
-        self.stop_threds = True
+        if self.client.is_connected:
+            self.client.disconnect()
         self.destroy()
 
     def __connect_client(self):
-        username = self.username_input.get()
-        self.user = self.client.connect(username)
-        self.is_connected_msg.set('Connected')
-        Thread(target=self.__message_reciever_handler, args=(self.client, )).start()
+        if self.client.is_connected:
+            self.client.disconnect()
+            self.is_connected_msg.set('Not Connected')
+        else:
+            username = self.username_input.get()
+            self.user = self.client.connect(username)
+            self.is_connected_msg.set('Connected')
+            self.t1 = Thread(target=self.__message_reciever_handler, args=(self.client, ))
+            self.t1.start()
 
     def __send_message(self):
         message = self.chat_box.get("1.0",'end-1c')
@@ -63,6 +73,6 @@ class Window(tk.Tk):
             self.chat_mesages.insert(self.chat_mesages.size() + 1, '[{}] - {}'.format(username, message))
 
     def __message_reciever_handler(self, client):
-        response = client.subscribe_messages(self.user)
+        response = client.subscribe_messages()
         for message in response:
             self.__add_message(message.username, message.message)

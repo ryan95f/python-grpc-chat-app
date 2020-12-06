@@ -35,9 +35,6 @@ class Window(tk.Tk):
         self.send_btn = tk.Button(self, text='Send', height=5, width=20, command=self.__send_message)
         self.send_btn.grid(row=2, column=4, columnspan=2, sticky='we')
 
-        self.message_queue = queue.Queue()
-        Thread(target=self.__message_reciever_handler, args=(self.client, self.message_queue, )).start()
-
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def on_close(self):
@@ -46,21 +43,26 @@ class Window(tk.Tk):
 
     def __connect_client(self):
         username = self.username_input.get()
-        result = self.client.connect(username)
+        self.user = self.client.connect(username)
         self.is_connected_msg.set('Connected')
+        Thread(target=self.__message_reciever_handler, args=(self.client, )).start()
 
     def __send_message(self):
         message = self.chat_box.get("1.0",'end-1c')
         self.chat_box.delete('1.0', 'end-1c')
 
-        message_to_send = chat_pb2.ChatMessage(userId=2, username='Ryan', message='Test')
-        self.__add_message('Ryan', message)
+        message_to_send = chat_pb2.ChatMessage(
+            userId=self.user.userId,
+            username=self.user.username,
+            message=message
+        )
         self.client.send_message(message_to_send)
+        self.__add_message(self.user.username, message)
 
     def __add_message(self, username, message):
             self.chat_mesages.insert(self.chat_mesages.size() + 1, '[{}] - {}'.format(username, message))
 
-    def __message_reciever_handler(self, client, queue):
-        response = client.subscribe_messages(chat_pb2.ChatUserConnected(userId=2, username='Ryan'))
+    def __message_reciever_handler(self, client):
+        response = client.subscribe_messages(self.user)
         for message in response:
             self.__add_message(message.username, message.message)

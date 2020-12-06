@@ -7,7 +7,7 @@ class ChatService(chat_pb2_grpc.ChatServicer):
         super(ChatService, self).__init__()
         self.chats = []
         self.users = {}
-        self.stop_thread = False
+        self.stop_connection = False
 
     def connect(self, request, context):
         user_id = random.randint(1, 10000)
@@ -26,9 +26,12 @@ class ChatService(chat_pb2_grpc.ChatServicer):
         current_user_id = request.userId
         last_seen_message_index = 0
 
-        while (not self.stop_thread) and (self.users.get(current_user_id, None) != None):
+        while not self.stop_connection and self.__is_user_still_connected(current_user_id):
             while len(self.chats) > last_seen_message_index:
                 message = self.chats[last_seen_message_index]
                 last_seen_message_index += 1
                 if message.userId != current_user_id:
                     yield message
+
+    def __is_user_still_connected(self, user_id):
+        return self.users.get(user_id, None) != None

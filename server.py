@@ -14,7 +14,7 @@ def main():
         server.wait_for_termination()
     except KeyboardInterrupt:
         print('Stopping Server')
-        service.stop_thread = True
+        service.stop_connection = True
 
 if __name__ == '__main__':
     main()

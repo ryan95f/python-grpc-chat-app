@@ -34,6 +34,11 @@ class ChatStub(object):
                 request_serializer=src_dot_server_dot_chat__pb2.ChatUserConnected.SerializeToString,
                 response_deserializer=src_dot_server_dot_chat__pb2.ChatMessage.FromString,
                 )
+        self.subscribeActiveUsers = channel.unary_stream(
+                '/Chat/subscribeActiveUsers',
+                request_serializer=src_dot_server_dot_chat__pb2.ChatUserConnected.SerializeToString,
+                response_deserializer=src_dot_server_dot_chat__pb2.ChatUser.FromString,
+                )
 
 
 class ChatServicer(object):
@@ -63,6 +68,12 @@ class ChatServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def subscribeActiveUsers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ChatServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -85,6 +96,11 @@ def add_ChatServicer_to_server(servicer, server):
                     servicer.subscribeMessages,
                     request_deserializer=src_dot_server_dot_chat__pb2.ChatUserConnected.FromString,
                     response_serializer=src_dot_server_dot_chat__pb2.ChatMessage.SerializeToString,
+            ),
+            'subscribeActiveUsers': grpc.unary_stream_rpc_method_handler(
+                    servicer.subscribeActiveUsers,
+                    request_deserializer=src_dot_server_dot_chat__pb2.ChatUserConnected.FromString,
+                    response_serializer=src_dot_server_dot_chat__pb2.ChatUser.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -161,5 +177,22 @@ class Chat(object):
         return grpc.experimental.unary_stream(request, target, '/Chat/subscribeMessages',
             src_dot_server_dot_chat__pb2.ChatUserConnected.SerializeToString,
             src_dot_server_dot_chat__pb2.ChatMessage.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def subscribeActiveUsers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/Chat/subscribeActiveUsers',
+            src_dot_server_dot_chat__pb2.ChatUserConnected.SerializeToString,
+            src_dot_server_dot_chat__pb2.ChatUser.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -5,6 +5,7 @@ service Chat {
     rpc disconnect(ChatUserConnected) returns (ChatUserConnected);
     rpc sendMessage(ChatUserConnected) returns (ChatMessage);
     rpc subscribeMessages(ChatUserConnected) returns (stream ChatMessage);
+    rpc subscribeActiveUsers(ChatUserConnected) returns (stream ChatUser);
 }
 
 message ChatUser {

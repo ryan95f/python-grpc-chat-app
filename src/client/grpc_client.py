@@ -30,3 +30,6 @@ class GrpcClient:
 
     def send_message(self, message):
         return self.__stub.sendMessage(message)
+
+    def subscribe_active_users(self):
+        return self.__stub.subscribeActiveUsers(self.__user)

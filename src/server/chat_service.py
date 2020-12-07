@@ -13,9 +13,8 @@ class ChatService(chat_pb2_grpc.ChatServicer):
 
     def connect(self, request, context):
         user_id = random.randint(1, 10000)
-        user = chat_pb2.ChatUserConnected(username=request.username, userId=user_id)
-        self.users[user_id] = user
-        return user
+        self.users[user_id] = request.username
+        return chat_pb2.ChatUserConnected(username=request.username, userId=user_id)
 
     def disconnect(self, request, context):
         del self.users[request.userId]
@@ -44,10 +43,10 @@ class ChatService(chat_pb2_grpc.ChatServicer):
         current_user_id = request.userId
         
         while not self.stop_connection and self.__is_user_still_connected(current_user_id):
-            json = json.dumps(self.users)
-            md5_hash = md5(json).hexdigest()
+            json_users = json.dumps(self.users)
+            md5_hash = md5(bytes(json_users, 'utf-8')).hexdigest()
             if current_hash != md5_hash:
                 current_hash = md5_hash
-                for user in self.users:
-                    if user.userId != current_user_id:
-                        yield user
+                for user_id, username in self.users.items():
+                    if user_id != current_user_id:
+                        yield chat_pb2.ChatUserConnected(username=username, userId=user_id)

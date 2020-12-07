@@ -31,7 +31,6 @@ class Window(tk.Tk):
         self.connection_status_label = tk.Label(self, width=15, foreground='red', textvariable=self.is_connected_msg)
         self.connection_status_label.grid(row=0, column=5)
 
-        self.chat_messages_var = tk.StringVar()
         self.chat_mesages = tk.Listbox(self, height=20)
         self.chat_mesages.grid(row=1, column=0, columnspan=3, sticky='we')
 
@@ -43,6 +42,9 @@ class Window(tk.Tk):
         self.send_btn['state'] = 'disabled'
 
         self.protocol("WM_DELETE_WINDOW", self.__on_close)
+
+        self.active_users_list = tk.Listbox(self, height=10)
+        self.active_users_list.grid(row=1, column=4, columnspan=2, sticky='we')
 
     def __btn_action_toggle_client_connection(self):
         if self.__client.is_connected:
@@ -67,6 +69,7 @@ class Window(tk.Tk):
         self.connect_btn.configure(text='Disconnect')
 
         Thread(target=self.__message_reciever_handler).start()
+        Thread(target=self.__active_user_reciever_handler).start()
 
     def __message_reciever_handler(self):
         response = self.__client.subscribe_messages()
@@ -75,6 +78,11 @@ class Window(tk.Tk):
 
     def __display_chat_message(self, username, message):
             self.chat_mesages.insert(self.chat_mesages.size() + 1, '[{:10}] - {}'.format(username, message))
+
+    def __active_user_reciever_handler(self):
+        response = self.__client.subscribe_active_users()
+        for user in response:
+            print(user)
 
     def __btn_action_send_message(self):
         message = self.__get_users_message()

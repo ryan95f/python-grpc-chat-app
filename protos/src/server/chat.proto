@@ -2,6 +2,9 @@ syntax = "proto3";
 
 service Chat {
     rpc connect(ChatUser) returns (ChatUserConnected);
+    rpc disconnect(ChatUserConnected) returns (ChatUserConnected);
+    rpc sendMessage(ChatUserConnected) returns (ChatMessage);
+    rpc subscribeMessages(ChatUserConnected) returns (stream ChatMessage);
 }
 
 message ChatUser {
@@ -11,4 +14,14 @@ message ChatUser {
 message ChatUserConnected {
     int32 userId = 1;
     string username = 2;
+}
+
+message ChatUserDisconnect {
+    bool isDisconnected = 1;
+}
+
+message ChatMessage {
+    int32 userId = 1;
+    string username = 2;
+    string message = 3;
 }

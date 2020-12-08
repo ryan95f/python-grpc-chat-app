@@ -19,6 +19,8 @@ class Window(tk.Tk):
     def __del__(self):
         if self.__client.is_connected:
             self.__client.disconnect()
+        self.__reciever_thread.join()
+        self.__active_user_thread.join()
 
     def __setup_widgets(self):
         self.username_input = tk.Entry(self, width=50)
@@ -69,8 +71,11 @@ class Window(tk.Tk):
         self.connection_status_label.configure(foreground='green')
         self.connect_btn.configure(text='Disconnect')
 
-        Thread(target=self.__message_reciever_handler).start()
-        Thread(target=self.__active_user_reciever_handler).start()
+        self.__reciever_thread = Thread(target=self.__message_reciever_handler)
+        self.__reciever_thread.start()
+        
+        self.__active_user_thread = Thread(target=self.__active_user_reciever_handler)
+        self.__active_user_thread.start()
 
     def __message_reciever_handler(self):
         response = self.__client.subscribe_messages()

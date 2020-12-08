@@ -4,4 +4,4 @@ init:
 	pip install -r requirements.txt
 
 proto:
-	python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/src/server/*.proto 
+	python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/src/server/*.proto

@@ -20,7 +20,7 @@ class GrpcClient:
         return response
 
     def disconnect(self):
-        response = self.__stub.disconnect(self.__user)
+        self.__stub.disconnect(self.__user)
         self.__user = None
         self.__is_connected = False
         return True

@@ -49,4 +49,4 @@ class ChatService(chat_pb2_grpc.ChatServicer):
                 current_hash = md5_hash
                 for user_id, username in self.users.items():
                     if user_id != current_user_id:
-                        yield chat_pb2.ChatUserConnected(username=username, userId=user_id)
+                        yield chat_pb2.ChatActiveUser(username=username, userId=user_id, currentHash=current_hash)

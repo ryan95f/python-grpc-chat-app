@@ -37,7 +37,7 @@ class ChatStub(object):
         self.subscribeActiveUsers = channel.unary_stream(
                 '/Chat/subscribeActiveUsers',
                 request_serializer=src_dot_server_dot_chat__pb2.ChatUserConnected.SerializeToString,
-                response_deserializer=src_dot_server_dot_chat__pb2.ChatUser.FromString,
+                response_deserializer=src_dot_server_dot_chat__pb2.ChatActiveUser.FromString,
                 )
 
 
@@ -100,7 +100,7 @@ def add_ChatServicer_to_server(servicer, server):
             'subscribeActiveUsers': grpc.unary_stream_rpc_method_handler(
                     servicer.subscribeActiveUsers,
                     request_deserializer=src_dot_server_dot_chat__pb2.ChatUserConnected.FromString,
-                    response_serializer=src_dot_server_dot_chat__pb2.ChatUser.SerializeToString,
+                    response_serializer=src_dot_server_dot_chat__pb2.ChatActiveUser.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -193,6 +193,6 @@ class Chat(object):
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/Chat/subscribeActiveUsers',
             src_dot_server_dot_chat__pb2.ChatUserConnected.SerializeToString,
-            src_dot_server_dot_chat__pb2.ChatUser.FromString,
+            src_dot_server_dot_chat__pb2.ChatActiveUser.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -50,6 +50,7 @@ class Window(tk.Tk):
         if self.__client.is_connected:
             self.__disconnect_from_server()
             self.__clear_chat_messages()
+            self.__clear_active_user_list()
         else:
             self.__connect_to_server()
 
@@ -81,8 +82,15 @@ class Window(tk.Tk):
 
     def __active_user_reciever_handler(self):
         response = self.__client.subscribe_active_users()
+        messages_start_index = 1
+        current_hash = ""
         for user in response:
-            print(user)
+            if current_hash != user.currentHash:
+                current_hash = user.currentHash
+                self.__clear_active_user_list()
+                messages_start_index = 1
+            self.active_users_list.insert(messages_start_index, user.username)
+            messages_start_index += 1
 
     def __btn_action_send_message(self):
         message = self.__get_users_message()
@@ -116,3 +124,7 @@ class Window(tk.Tk):
         messsages_end_index = self.chat_mesages.size()
         self.chat_mesages.delete(messages_start_index, messsages_end_index)
 
+    def __clear_active_user_list(self):
+        messages_start_index = 0
+        messsages_end_index = self.active_users_list.size()
+        self.active_users_list.delete(messages_start_index, messsages_end_index)

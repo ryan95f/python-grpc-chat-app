@@ -1,6 +1,8 @@
 import random
+import json
 import src.server.chat_pb2 as chat_pb2
 import src.server.chat_pb2_grpc as chat_pb2_grpc
+from hashlib import md5
 
 class ChatService(chat_pb2_grpc.ChatServicer):
     def __init__(self):
@@ -35,3 +37,16 @@ class ChatService(chat_pb2_grpc.ChatServicer):
 
     def __is_user_still_connected(self, user_id):
         return self.users.get(user_id, None) != None
+
+    def subscribeActiveUsers(self, request, context):
+        current_hash = ""
+        current_user_id = request.userId
+        
+        while not self.stop_connection and self.__is_user_still_connected(current_user_id):
+            json_users = json.dumps(self.users)
+            md5_hash = md5(bytes(json_users, 'utf-8')).hexdigest()
+            if current_hash != md5_hash:
+                current_hash = md5_hash
+                for user_id, username in self.users.items():
+                    if user_id != current_user_id:
+                        yield chat_pb2.ChatActiveUser(username=username, userId=user_id, currentHash=current_hash)

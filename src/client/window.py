@@ -19,6 +19,8 @@ class Window(tk.Tk):
     def __del__(self):
         if self.__client.is_connected:
             self.__client.disconnect()
+        self.__reciever_thread.join()
+        self.__active_user_thread.join()
 
     def __setup_widgets(self):
         self.username_input = tk.Entry(self, width=50)
@@ -31,7 +33,6 @@ class Window(tk.Tk):
         self.connection_status_label = tk.Label(self, width=15, foreground='red', textvariable=self.is_connected_msg)
         self.connection_status_label.grid(row=0, column=5)
 
-        self.chat_messages_var = tk.StringVar()
         self.chat_mesages = tk.Listbox(self, height=20)
         self.chat_mesages.grid(row=1, column=0, columnspan=3, sticky='we')
 
@@ -44,10 +45,14 @@ class Window(tk.Tk):
 
         self.protocol("WM_DELETE_WINDOW", self.__on_close)
 
+        self.active_users_list = tk.Listbox(self, height=10)
+        self.active_users_list.grid(row=1, column=4, columnspan=2, sticky='we')
+
     def __btn_action_toggle_client_connection(self):
         if self.__client.is_connected:
             self.__disconnect_from_server()
             self.__clear_chat_messages()
+            self.__clear_active_user_list()
         else:
             self.__connect_to_server()
 
@@ -66,7 +71,11 @@ class Window(tk.Tk):
         self.connection_status_label.configure(foreground='green')
         self.connect_btn.configure(text='Disconnect')
 
-        Thread(target=self.__message_reciever_handler).start()
+        self.__reciever_thread = Thread(target=self.__message_reciever_handler)
+        self.__reciever_thread.start()
+        
+        self.__active_user_thread = Thread(target=self.__active_user_reciever_handler)
+        self.__active_user_thread.start()
 
     def __message_reciever_handler(self):
         response = self.__client.subscribe_messages()
@@ -75,6 +84,18 @@ class Window(tk.Tk):
 
     def __display_chat_message(self, username, message):
             self.chat_mesages.insert(self.chat_mesages.size() + 1, '[{:10}] - {}'.format(username, message))
+
+    def __active_user_reciever_handler(self):
+        response = self.__client.subscribe_active_users()
+        messages_start_index = 1
+        current_hash = ""
+        for user in response:
+            if current_hash != user.currentHash:
+                current_hash = user.currentHash
+                self.__clear_active_user_list()
+                messages_start_index = 1
+            self.active_users_list.insert(messages_start_index, user.username)
+            messages_start_index += 1
 
     def __btn_action_send_message(self):
         message = self.__get_users_message()
@@ -108,3 +129,7 @@ class Window(tk.Tk):
         messsages_end_index = self.chat_mesages.size()
         self.chat_mesages.delete(messages_start_index, messsages_end_index)
 
+    def __clear_active_user_list(self):
+        messages_start_index = 0
+        messsages_end_index = self.active_users_list.size()
+        self.active_users_list.delete(messages_start_index, messsages_end_index)

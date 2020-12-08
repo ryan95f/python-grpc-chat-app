@@ -4,6 +4,7 @@ from src.client.grpc_client import GrpcClient
 
 import src.server.chat_pb2 as chat_pb2
 import src.server.chat_pb2_grpc as chat_pb2_grpc
+from src.client.ui import ConnectionFrame, ChatboxFrame
 
 
 class Window(tk.Tk):
@@ -23,25 +24,33 @@ class Window(tk.Tk):
         self.__active_user_thread.join()
 
     def __setup_widgets(self):
-        self.username_input = tk.Entry(self, width=50)
-        self.username_input.grid(row=0, column=0, columnspan=3, sticky='we')
+        self.connection_frame = ConnectionFrame(self, self.__client)
+        self.connection_frame.grid(row=0, column=0, columnspan=5, sticky='we')
 
-        self.connect_btn = tk.Button(self, text='Connect', width=15, command=self.__btn_action_toggle_client_connection)
-        self.connect_btn.grid(row=0, column=4)
+        self.chatbox_frame = ChatboxFrame(self, self.__client)
+        self.chatbox_frame.grid(row=2, column=0, columnspan=5, sticky='we')
+        
+        # self.username_input = tk.Entry(self, width=50)
+        # self.username_input.grid(row=0, column=0, columnspan=3, sticky='we')
 
-        self.is_connected_msg = tk.StringVar(value='Not Connected')
-        self.connection_status_label = tk.Label(self, width=15, foreground='red', textvariable=self.is_connected_msg)
-        self.connection_status_label.grid(row=0, column=5)
+        # self.connect_btn = tk.Button(self, text='Connect', width=15, command=self.__btn_action_toggle_client_connection)
+        # self.connect_btn.grid(row=0, column=4)
+
+        # self.is_connected_msg = tk.StringVar(value='Not Connected')
+        # self.connection_status_label = tk.Label(self, width=15, foreground='red', textvariable=self.is_connected_msg)
+        # self.connection_status_label.grid(row=0, column=5)
 
         self.chat_mesages = tk.Listbox(self, height=20)
         self.chat_mesages.grid(row=1, column=0, columnspan=3, sticky='we')
 
-        self.chat_box = tk.Text(self, height=5)
-        self.chat_box.grid(row=2, column=0, columnspan=3)
+        # self.chat_box = tk.Text(self, height=5)
+        # self.chat_box.grid(row=2, column=0, columnspan=3)
 
-        self.send_btn = tk.Button(self, text='Send', height=5, width=20, command=self.__btn_action_send_message)
-        self.send_btn.grid(row=2, column=4, columnspan=2, sticky='we')
-        self.send_btn['state'] = 'disabled'
+        # self.send_btn = tk.Button(self, text='Send', height=5, width=20, command=self.__btn_action_send_message)
+        # self.send_btn.grid(row=2, column=4, columnspan=2, sticky='we')
+        # self.send_btn['state'] = 'disabled'
+
+        
 
         self.protocol("WM_DELETE_WINDOW", self.__on_close)
 

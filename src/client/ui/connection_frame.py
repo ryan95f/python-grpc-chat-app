@@ -2,16 +2,17 @@ import tkinter as tk
 from threading import Thread
 from enum import Enum
 
+from src.client.ui.base import BaseChatFrame
+
 class ConnectionStatus(Enum):
     CONNECTED = 1
     DISCONNECT = 2
 
 
-class ConnectionFrame(tk.Frame):
-    def __init__(self, root, grpc_client):
-        super(ConnectionFrame, self).__init__(root)
-        self.root = root
-        self.grpc_client = grpc_client
+class ConnectionFrame(BaseChatFrame):
+    def __init__(self, master, grpc_client):
+        super(ConnectionFrame, self).__init__(master, grpc_client)
+        self.__setup_widgets()
 
     def __setup_widgets(self):
         self.__setup_username_input_widget()
@@ -61,7 +62,7 @@ class ConnectionFrame(tk.Frame):
             }
         }
 
-        current_connection_details = connection_config_map.get(connection_status.lower())
+        current_connection_details = connection_config_map.get(connection_status)
         self.is_connected_msg.set(current_connection_details['status'])
         self.connection_status_label.configure(foreground=current_connection_details['colour'])
         self.connect_btn.configure(text=current_connection_details['btn_text'])

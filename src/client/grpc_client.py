@@ -17,6 +17,10 @@ class GrpcClient:
     def username(self):
         return self.__user.username
 
+    @property
+    def user_id(self):
+        return self.__user.userId
+
     def connect(self, username):
         response = self.__stub.connect(chat_pb2.ChatUser(username=username))
         self.__user = response

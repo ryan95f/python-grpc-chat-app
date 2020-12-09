@@ -18,19 +18,19 @@ class Window(tk.Tk):
         self.__setup_widgets()
 
     def __del__(self):
-        if self.__client.is_connected:
-            self.__client.disconnect()
+        # if self.__client.is_connected:
+        #     self.__client.disconnect()
         self.__reciever_thread.join()
-        self.__active_user_thread.join()
+        # self.__active_user_thread.join()
 
     def __setup_widgets(self):
-        self.connection_frame = ConnectionFrame(self, self.__client)
+        self.connection_frame = ConnectionFrame(self, self.__client, connected_callback=self.connected_callback, disconnect_callback=self.disconnected_callback)
         self.connection_frame.grid(row=0, column=0, columnspan=5, sticky='we')
 
         self.chat_message_frame = ChatMessagesFrame(self, self.__client)
         self.chat_message_frame.grid(row=1, column=0, columnspan=5, sticky='we')
 
-        self.chatbox_frame = ChatboxFrame(self, self.__client)
+        self.chatbox_frame = ChatboxFrame(self, self.__client, message_send_callback=self.message_send_callback)
         self.chatbox_frame.grid(row=2, column=0, columnspan=5, sticky='we')
         
         # self.username_input = tk.Entry(self, width=50)
@@ -89,10 +89,10 @@ class Window(tk.Tk):
     #     self.__active_user_thread = Thread(target=self.__active_user_reciever_handler)
     #     self.__active_user_thread.start()
 
-    # def __message_reciever_handler(self):
-    #     response = self.__client.subscribe_messages()
-    #     for message in response:
-    #         self.__display_chat_message(message.username, message.message)
+    def __message_reciever_handler(self):
+        response = self.__client.subscribe_messages()
+        for message in response:
+            self.chat_message_frame.add_incoming_message(message.username, message.message)
 
     # def __display_chat_message(self, username, message):
     #         self.chat_mesages.insert(self.chat_mesages.size() + 1, '[{:10}] - {}'.format(username, message))
@@ -135,6 +135,19 @@ class Window(tk.Tk):
         if self.__client.is_connected:
             self.__client.disconnect()
         self.destroy()
+
+    def connected_callback(self):
+        self.chatbox_frame.enable_send_btn()
+        self.__reciever_thread = Thread(target=self.__message_reciever_handler)
+        self.__reciever_thread.start()
+
+    def disconnected_callback(self):
+        self.chatbox_frame.disable_send_btn()
+        self.chat_message_frame.clear_chat_messages()
+
+    def message_send_callback(self, msg):
+        self.chat_message_frame.add_message(msg)
+
 
     # def __clear_chat_messages(self):
     #     messages_start_index = 0

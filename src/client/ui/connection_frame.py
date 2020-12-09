@@ -10,9 +10,15 @@ class ConnectionStatus(Enum):
 
 
 class ConnectionFrame(BaseChatFrame):
-    def __init__(self, master, grpc_client):
+    def __init__(self, master, grpc_client, connected_callback=None, disconnect_callback=None):
         super(ConnectionFrame, self).__init__(master, grpc_client)
+        self._connected_callback = connected_callback
+        self._disconnect_callback = disconnect_callback
         self.__setup_widgets()
+
+    def __del__(self):
+        if self.grpc_client.is_connected:
+            self.__disconnect_from_server()
 
     def __setup_widgets(self):
         self.__setup_username_input_widget()
@@ -35,12 +41,16 @@ class ConnectionFrame(BaseChatFrame):
 
     def __disconnect_from_server(self):
         self.grpc_client.disconnect()
-        self.is_connected_msg.set(ConnectionStatus.DISCONNECT)
+        self.__set_widget_text_by_connection_status(ConnectionStatus.DISCONNECT)
+        if self._disconnect_callback is not None:
+            self._disconnect_callback()
 
     def __connect_to_server(self):
         username = self.username_input.get()
         self.user = self.grpc_client.connect(username)
         self.__set_widget_text_by_connection_status(ConnectionStatus.CONNECTED)
+        if self._connected_callback is not None:
+            self._connected_callback()
 
     def __setup_connection_status_label_widget(self):
         self.is_connected_msg = tk.StringVar()

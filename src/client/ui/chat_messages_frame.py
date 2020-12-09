@@ -14,6 +14,9 @@ class ChatMessagesFrame(BaseChatFrame):
         username = self.grpc_client.username
         self.chat_mesages.insert(self.chat_mesages.size() + 1, '[{:10}] - {}'.format(username, message))
 
+    def add_incoming_message(self, message, username):
+        self.chat_mesages.insert(self.chat_mesages.size() + 1, '[{:10}] - {}'.format(username, message))
+
     def clear_chat_messages(self):
         messages_start_index = 0
         messsages_end_index = self.chat_mesages.size()

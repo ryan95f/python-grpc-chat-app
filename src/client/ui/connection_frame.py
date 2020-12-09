@@ -20,12 +20,12 @@ class ConnectionFrame(BaseChatFrame):
         self.__setup_connection_status_label_widget()
 
     def __setup_username_input_widget(self):
-        self.username_input = tk.Entry(self, width=50)
-        self.username_input.grid(row=0, column=0, columnspan=3, sticky='we')
+        self.username_input = tk.Entry(self)
+        self.username_input.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
 
     def __setup_connection_btn_widget(self):
         self.connect_btn = tk.Button(self, width=15, command=self.__btn_action_toggle_client_connection)
-        self.connect_btn.grid(row=0, column=4)
+        self.connect_btn.pack(side=tk.LEFT)
 
     def __btn_action_toggle_client_connection(self):
         if self.grpc_client.is_connected:
@@ -45,7 +45,7 @@ class ConnectionFrame(BaseChatFrame):
     def __setup_connection_status_label_widget(self):
         self.is_connected_msg = tk.StringVar()
         self.connection_status_label = tk.Label(self, width=15, textvariable=self.is_connected_msg)
-        self.connection_status_label.grid(row=0, column=5)
+        self.connection_status_label.pack(side=tk.LEFT)
         self.__set_widget_text_by_connection_status(ConnectionStatus.DISCONNECT)
 
     def __set_widget_text_by_connection_status(self, connection_status):

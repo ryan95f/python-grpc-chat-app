@@ -28,7 +28,7 @@ class Window(tk.Tk):
         self.connection_frame.grid(row=0, column=0, columnspan=5, sticky='we')
 
         self.chat_message_frame = ChatMessagesFrame(self, self.__client)
-        self.chat_message_frame.grid(row=1, column=0, columnspan=4, sticky='we')
+        self.chat_message_frame.grid(row=1, column=0, columnspan=5, sticky='we')
 
         self.chatbox_frame = ChatboxFrame(self, self.__client)
         self.chatbox_frame.grid(row=2, column=0, columnspan=5, sticky='we')

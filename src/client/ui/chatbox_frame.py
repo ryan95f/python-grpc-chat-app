@@ -20,7 +20,7 @@ class ChatboxFrame(BaseChatFrame):
 
     def __set_up_chat_send_btn_widget(self):
         self.send_btn = tk.Button(self, text='Send', height=5, width=20, command=self.__btn_action_send_message)
-        self.send_btn.grid(row=0, column=4, columnspan=2, sticky='we')
+        self.send_btn.grid(row=0, column=4, columnspan=2, sticky=tk.EW)
         self.disable_send_btn()
 
     def __btn_action_send_message(self):

@@ -11,11 +11,7 @@ class ChatMessagesFrame(BaseChatFrame):
         self.chat_mesages = tk.Listbox(self, height=20)
         self.chat_mesages.pack(fill=tk.BOTH)
 
-    def add_message(self, message):
-        username = self.grpc_client.username
-        self.chat_mesages.insert(self.chat_mesages.size() + 1, '[{:10}] - {}'.format(username, message))
-
-    def add_incoming_message(self, message, username):
+    def add_message(self, message, username):
         self.chat_mesages.insert(self.chat_mesages.size() + 1, '[{:10}] - {}'.format(username, message))
 
     def clear_chat_messages(self):

@@ -2,10 +2,9 @@ import tkinter as tk
 from threading import Thread
 from src.client.grpc_client import GrpcClient
 
+import src.client.ui as ui
 import src.server.chat_pb2 as chat_pb2
 import src.server.chat_pb2_grpc as chat_pb2_grpc
-from src.client.ui import (ConnectionFrame, ChatboxFrame,
-                           ChatMessagesFrame, ActiveUsersFrame)
 
 
 class Window(tk.Tk):
@@ -24,26 +23,26 @@ class Window(tk.Tk):
         self.__active_user_thread.join()
 
     def __setup_widgets(self):
-        self.connection_frame = ConnectionFrame(self, self.__client,
-                                                connected_callback=self.connected_callback,
-                                                disconnect_callback=self.disconnected_callback)
-        self.connection_frame.grid(row=0, column=0, columnspan=5, sticky='we')
+        self.connection_frame = ui.ConnectionFrame(self, self.__client,
+                                                   connected_callback=self.connected_callback,
+                                                   disconnect_callback=self.disconnected_callback)
+        self.connection_frame.grid(row=0, column=0, columnspan=5, sticky=tk.EW)
 
-        self.chat_message_frame = ChatMessagesFrame(self, self.__client)
-        self.chat_message_frame.grid(row=1, column=0, columnspan=4, sticky='we')
+        self.chat_message_frame = ui.ChatMessagesFrame(self, self.__client)
+        self.chat_message_frame.grid(row=1, column=0, columnspan=4, sticky=tk.EW)
 
-        self.active_user_frame = ActiveUsersFrame(self)
-        self.active_user_frame.grid(row=1, column=4, sticky='we')
+        self.active_user_frame = ui.ActiveUsersFrame(self)
+        self.active_user_frame.grid(row=1, column=4, sticky=tk.EW)
 
-        self.chatbox_frame = ChatboxFrame(self, self.__client, message_send_callback=self.message_send_callback)
-        self.chatbox_frame.grid(row=2, column=0, columnspan=5, sticky='we')
+        self.chatbox_frame = ui.ChatboxFrame(self, self.__client, message_send_callback=self.message_send_callback)
+        self.chatbox_frame.grid(row=2, column=0, columnspan=5, sticky=tk.EW)
 
         self.protocol("WM_DELETE_WINDOW", self.__on_close)
 
     def __message_reciever_handler(self):
         response = self.__client.subscribe_messages()
         for message in response:
-            self.chat_message_frame.add_incoming_message(message.username, message.message)
+            self.chat_message_frame.add_message(message.username, message.message)
 
     def __active_user_reciever_handler(self):
         response = self.__client.subscribe_active_users()
@@ -74,4 +73,4 @@ class Window(tk.Tk):
         self.active_user_frame.clear_active_user_list()
 
     def message_send_callback(self, msg):
-        self.chat_message_frame.add_message(msg)
+        self.chat_message_frame.add_message(self.__client.username, msg)

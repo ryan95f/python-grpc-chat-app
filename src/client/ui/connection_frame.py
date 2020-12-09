@@ -4,6 +4,7 @@ from enum import Enum
 
 from src.client.ui.base import BaseChatFrame
 
+
 class ConnectionStatus(Enum):
     CONNECTED = 1
     DISCONNECT = 2

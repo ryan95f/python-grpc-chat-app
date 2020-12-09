@@ -3,12 +3,13 @@ import src.server.chat_pb2 as chat_pb2
 from src.client.grpc_client import GrpcClient
 from src.client.ui.base import BaseChatFrame
 
+
 class ChatboxFrame(BaseChatFrame):
     def __init__(self, master, grpc_client, message_send_callback=None):
         super(ChatboxFrame, self).__init__(master, grpc_client)
         self._message_send_callback = message_send_callback
         self.__set_up_widgets()
-    
+
     def __set_up_widgets(self):
         self.__set_up_chatbox_widgets()
         self.__set_up_chat_send_btn_widget()
@@ -32,11 +33,11 @@ class ChatboxFrame(BaseChatFrame):
             self._message_send_callback(message)
 
     def __get_users_message(self):
-        return self.chat_box.get('1.0','end-1c')
-        
+        return self.chat_box.get('1.0', 'end-1c')
+
     def __clear_users_message_box(self):
         self.chat_box.delete('1.0', 'end-1c')
- 
+
     def __construct_message_payload(self, message):
         return chat_pb2.ChatMessage(
             userId=self.grpc_client.user_id,

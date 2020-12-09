@@ -4,7 +4,8 @@ from src.client.grpc_client import GrpcClient
 
 import src.server.chat_pb2 as chat_pb2
 import src.server.chat_pb2_grpc as chat_pb2_grpc
-from src.client.ui import ConnectionFrame, ChatboxFrame, ChatMessagesFrame, ActiveUsersFrame
+from src.client.ui import (ConnectionFrame, ChatboxFrame,
+                           ChatMessagesFrame, ActiveUsersFrame)
 
 
 class Window(tk.Tk):
@@ -23,7 +24,9 @@ class Window(tk.Tk):
         self.__active_user_thread.join()
 
     def __setup_widgets(self):
-        self.connection_frame = ConnectionFrame(self, self.__client, connected_callback=self.connected_callback, disconnect_callback=self.disconnected_callback)
+        self.connection_frame = ConnectionFrame(self, self.__client,
+                                                connected_callback=self.connected_callback,
+                                                disconnect_callback=self.disconnected_callback)
         self.connection_frame.grid(row=0, column=0, columnspan=5, sticky='we')
 
         self.chat_message_frame = ChatMessagesFrame(self, self.__client)
@@ -34,7 +37,7 @@ class Window(tk.Tk):
 
         self.chatbox_frame = ChatboxFrame(self, self.__client, message_send_callback=self.message_send_callback)
         self.chatbox_frame.grid(row=2, column=0, columnspan=5, sticky='we')
-    
+
         self.protocol("WM_DELETE_WINDOW", self.__on_close)
 
     def __message_reciever_handler(self):
@@ -58,6 +61,7 @@ class Window(tk.Tk):
 
     def connected_callback(self):
         self.chatbox_frame.enable_send_btn()
+
         self.__reciever_thread = Thread(target=self.__message_reciever_handler)
         self.__reciever_thread.start()
 

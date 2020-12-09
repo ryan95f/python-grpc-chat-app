@@ -1,11 +1,12 @@
 import tkinter as tk
 from src.client.ui.base import BaseChatFrame
 
+
 class ChatMessagesFrame(BaseChatFrame):
     def __init__(self, master, grpc_client):
         super(ChatMessagesFrame, self).__init__(master, grpc_client)
         self.__setup_chat_messages_widget()
-    
+
     def __setup_chat_messages_widget(self):
         self.chat_mesages = tk.Listbox(self, height=20)
         self.chat_mesages.pack(fill=tk.BOTH)

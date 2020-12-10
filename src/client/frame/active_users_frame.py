@@ -8,8 +8,11 @@ class ActiveUsersFrame(tk.Frame):
         self.__setup_widgets()
 
     def __setup_widgets(self):
-        self.__active_users_list = tk.Listbox(self, height=10, width=20)
-        self.__active_users_list.pack(fill=tk.X)
+        self.__active_user_label = tk.Label(self, text='Active Users')
+        self.__active_user_label.pack(padx=50)
+
+        self.__active_users_list = tk.Listbox(self, bd=0, height=18, width=21)
+        self.__active_users_list.pack()
 
     def clear_active_user_list(self):
         """Clear the display list of active users"""

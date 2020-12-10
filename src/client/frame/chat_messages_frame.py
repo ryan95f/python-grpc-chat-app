@@ -11,7 +11,7 @@ class ChatMessagesFrame(BaseChatFrame):
         self.chat_mesages = tk.Listbox(self, height=20)
         self.chat_mesages.pack(fill=tk.BOTH)
 
-    def add_message(self, message, username):
+    def add_message(self, username, message):
         """Add a user's message to the chatbox
 
         Args:

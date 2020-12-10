@@ -2,7 +2,7 @@ import tkinter as tk
 from threading import Thread
 from enum import Enum
 
-from src.client.ui.base import BaseChatFrame
+from src.client.frame.base import BaseChatFrame
 
 
 class ConnectionStatus(Enum):
@@ -15,6 +15,20 @@ class ConnectionFrame(BaseChatFrame):
         super(ConnectionFrame, self).__init__(master, grpc_client)
         self._connected_callback = connected_callback
         self._disconnect_callback = disconnect_callback
+        
+        self.__connection_config_map = {
+            ConnectionStatus.CONNECTED: {
+                'status': 'Connected',
+                'colour': 'green',
+                'btn_text': 'Disconnect'
+            },
+            ConnectionStatus.DISCONNECT: {
+                'status': 'Not Connected',
+                'colour': 'red',
+                'btn_text': 'Connect'
+            }
+        }
+
         self.__setup_widgets()
 
     def __del__(self):
@@ -60,20 +74,7 @@ class ConnectionFrame(BaseChatFrame):
         self.__set_widget_text_by_connection_status(ConnectionStatus.DISCONNECT)
 
     def __set_widget_text_by_connection_status(self, connection_status):
-        connection_config_map = {
-            ConnectionStatus.CONNECTED: {
-                'status': 'Connected',
-                'colour': 'green',
-                'btn_text': 'Disconnect'
-            },
-            ConnectionStatus.DISCONNECT: {
-                'status': 'Not Connected',
-                'colour': 'red',
-                'btn_text': 'Connect'
-            }
-        }
-
-        current_connection_details = connection_config_map.get(connection_status)
+        current_connection_details = self.__connection_config_map.get(connection_status)
         self.is_connected_msg.set(current_connection_details['status'])
         self.connection_status_label.configure(foreground=current_connection_details['colour'])
         self.connect_btn.configure(text=current_connection_details['btn_text'])

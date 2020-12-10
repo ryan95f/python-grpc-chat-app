@@ -1,5 +1,5 @@
 import tkinter as tk
-from src.client.ui.base import BaseChatFrame
+from src.client.frame.base import BaseChatFrame
 
 
 class ActiveUsersFrame(tk.Frame):
@@ -8,8 +8,8 @@ class ActiveUsersFrame(tk.Frame):
         self.__setup_widgets()
 
     def __setup_widgets(self):
-        self.__active_users_list = tk.Listbox(self, height=10)
-        self.__active_users_list.pack(expand=True, fill=tk.X)
+        self.__active_users_list = tk.Listbox(self, height=10, width=20)
+        self.__active_users_list.pack(fill=tk.X)
 
     def clear_active_user_list(self):
         """Clear the display list of active users"""

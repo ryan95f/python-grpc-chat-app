@@ -1,5 +1,5 @@
 import tkinter as tk
-from src.client.ui.base import BaseChatFrame
+from src.client.frame.base import BaseChatFrame
 
 
 class ChatMessagesFrame(BaseChatFrame):

@@ -28,14 +28,14 @@ class Window(tk.Tk):
                                                       disconnect_callback=self.__disconnected_callback)
         self.connection_frame.grid(row=0, column=0, columnspan=5, sticky=tk.EW)
 
-        self.chat_message_frame = frame.ChatMessagesFrame(self, self.__client)
-        self.chat_message_frame.grid(row=1, column=0, columnspan=4, sticky=tk.EW)
+        self.__chat_message_frame = frame.ChatMessagesFrame(self, self.__client)
+        self.__chat_message_frame.grid(row=1, column=0, columnspan=4, sticky=tk.EW)
 
-        self.active_user_frame = frame.ActiveUsersFrame(self)
-        self.active_user_frame.grid(row=1, column=4, sticky=tk.EW)
+        self.__active_user_frame = frame.ActiveUsersFrame(self)
+        self.__active_user_frame.grid(row=1, column=4, sticky=tk.EW)
 
-        self.chatbox_frame = frame.ChatboxFrame(self, self.__client, message_send_callback=self.__message_send_callback)
-        self.chatbox_frame.grid(row=2, column=0, columnspan=5, sticky=tk.EW)
+        self.__chatbox_frame = frame.ChatboxFrame(self, self.__client, message_send_callback=self.__message_send_callback)
+        self.__chatbox_frame.grid(row=2, column=0, columnspan=5, sticky=tk.EW)
 
         self.protocol("WM_DELETE_WINDOW", self.__on_close)
 
@@ -45,7 +45,7 @@ class Window(tk.Tk):
         self.destroy()
 
     def __connected_callback(self):
-        self.chatbox_frame.enable_send_btn()
+        self.__chatbox_frame.enable_send_btn()
 
         self.__reciever_thread = Thread(target=self.__message_reciever_handler)
         self.__reciever_thread.start()
@@ -56,7 +56,7 @@ class Window(tk.Tk):
     def __message_reciever_handler(self):
         response = self.__client.subscribe_messages()
         for message in response:
-            self.chat_message_frame.add_message(message.username, message.message)
+            self.__chat_message_frame.add_message(message.username, message.message)
 
     def __active_user_reciever_handler(self):
         response = self.__client.subscribe_active_users()
@@ -64,13 +64,13 @@ class Window(tk.Tk):
         for user in response:
             if current_hash != user.currentHash:
                 current_hash = user.currentHash
-                self.active_user_frame.clear_active_user_list()
-            self.active_user_frame.add_active_user(user.username)
+                self.__active_user_frame.clear_active_user_list()
+            self.__active_user_frame.add_active_user(user.username)
 
     def __disconnected_callback(self):
-        self.chatbox_frame.disable_send_btn()
-        self.chat_message_frame.clear_chat_messages()
-        self.active_user_frame.clear_active_user_list()
+        self.__chatbox_frame.disable_send_btn()
+        self.__chat_message_frame.clear_chat_messages()
+        self.__active_user_frame.clear_active_user_list()
 
     def __message_send_callback(self, msg):
-        self.chat_message_frame.add_message(self.__client.username, msg)
+        self.__chat_message_frame.add_message(self.__client.username, msg)

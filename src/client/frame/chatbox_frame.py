@@ -1,7 +1,7 @@
 import tkinter as tk
 import src.server.chat_pb2 as chat_pb2
 from src.client.grpc_client import GrpcClient
-from src.client.ui.base import BaseChatFrame
+from src.client.frame.base import BaseChatFrame
 
 
 class ChatboxFrame(BaseChatFrame):
@@ -46,7 +46,9 @@ class ChatboxFrame(BaseChatFrame):
         )
 
     def enable_send_btn(self):
+        """Enable the send button on the user interface"""
         self.send_btn['state'] = 'normal'
 
     def disable_send_btn(self):
+        """Disable the send button on the user interface"""
         self.send_btn['state'] = 'disabled'

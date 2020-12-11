@@ -32,7 +32,7 @@ class Window(tk.Tk):
         self.__chat_message_frame.grid(row=1, column=0, columnspan=4, sticky=tk.EW)
 
         self.__active_user_frame = frame.ActiveUsersFrame(self)
-        self.__active_user_frame.grid(row=1, column=4, sticky=tk.EW)
+        self.__active_user_frame.grid(row=1, column=4, columnspan=2)
 
         self.__chatbox_frame = frame.ChatboxFrame(self, self.__client, message_send_callback=self.__message_send_callback)
         self.__chatbox_frame.grid(row=2, column=0, columnspan=5, sticky=tk.EW)

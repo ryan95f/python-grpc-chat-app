@@ -11,11 +11,14 @@ class ConnectionStatus(Enum):
 
 
 class ConnectionFrame(BaseChatFrame):
+    __BUTTON_WIDTH = 15
+    __STATUS_LABLE_WIDTH = 15
+
     def __init__(self, master, grpc_client, connected_callback=None, disconnect_callback=None):
         super(ConnectionFrame, self).__init__(master, grpc_client)
         self._connected_callback = connected_callback
         self._disconnect_callback = disconnect_callback
-        
+
         self.__connection_config_map = {
             ConnectionStatus.CONNECTED: {
                 'status': 'Connected',
@@ -45,7 +48,7 @@ class ConnectionFrame(BaseChatFrame):
         self.username_input.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
 
     def __setup_connection_btn_widget(self):
-        self.connect_btn = tk.Button(self, width=15, command=self.__btn_action_toggle_client_connection)
+        self.connect_btn = tk.Button(self, width=self.__BUTTON_WIDTH, command=self.__btn_action_toggle_client_connection)
         self.connect_btn.pack(side=tk.LEFT)
 
     def __btn_action_toggle_client_connection(self):
@@ -69,7 +72,7 @@ class ConnectionFrame(BaseChatFrame):
 
     def __setup_connection_status_label_widget(self):
         self.is_connected_msg = tk.StringVar()
-        self.connection_status_label = tk.Label(self, width=15, textvariable=self.is_connected_msg)
+        self.connection_status_label = tk.Label(self, width=self.__STATUS_LABLE_WIDTH, textvariable=self.is_connected_msg)
         self.connection_status_label.pack(side=tk.LEFT)
         self.__set_widget_text_by_connection_status(ConnectionStatus.DISCONNECT)
 

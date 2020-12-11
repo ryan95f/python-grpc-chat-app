@@ -9,7 +9,7 @@ class ActiveUsersFrame(tk.Frame):
 
     def __setup_widgets(self):
         self.__active_user_label = tk.Label(self, text='Active Users')
-        self.__active_user_label.pack(padx=50)
+        self.__active_user_label.pack()
 
         self.__active_users_list = tk.Listbox(self, bd=0, height=18, width=21)
         self.__active_users_list.pack()

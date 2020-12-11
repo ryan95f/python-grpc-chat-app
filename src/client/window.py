@@ -15,12 +15,17 @@ class Window(tk.Tk):
         self.grid()
         self.resizable(False, False)
 
+        self.__reciever_thread = None
+        self.__active_user_thread = None
         self.__client = client.GrpcClient()
         self.__setup_widgets()
 
     def __del__(self):
-        self.__reciever_thread.join()
-        self.__active_user_thread.join()
+        if self.__reciever_thread is not None:
+            self.__reciever_thread.join()
+
+        if self.__active_user_thread is not None:
+            self.__active_user_thread.join()
 
     def __setup_widgets(self):
         self.connection_frame = frame.ConnectionFrame(self, self.__client,
@@ -28,7 +33,7 @@ class Window(tk.Tk):
                                                       disconnect_callback=self.__disconnected_callback)
         self.connection_frame.grid(row=0, column=0, columnspan=5, sticky=tk.EW)
 
-        self.__chat_message_frame = frame.ChatMessagesFrame(self, self.__client)
+        self.__chat_message_frame = frame.ChatMessagesFrame(self)
         self.__chat_message_frame.grid(row=1, column=0, columnspan=4, sticky=tk.EW)
 
         self.__active_user_frame = frame.ActiveUsersFrame(self)

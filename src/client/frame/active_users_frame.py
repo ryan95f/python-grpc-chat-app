@@ -3,7 +3,14 @@ from src.client.frame.base import BaseChatFrame
 
 
 class ActiveUsersFrame(tk.Frame):
+    """Frame to list the active users in the chat session"""
+
     def __init__(self, master):
+        """ActiveUsersFrame constructor
+
+        Args:
+            master: The parent tk component. Either a frame or tkinter Tk.
+        """
         super(ActiveUsersFrame, self).__init__(master)
         self.__setup_widgets()
 
@@ -24,7 +31,7 @@ class ActiveUsersFrame(tk.Frame):
         """Add a user to the active user list display
 
         Args:
-            username: The username to add to the list
+            username: The username to add to the list.
         """
         messages_start_index = self.__active_users_list.size() + 1
         self.__active_users_list.insert(messages_start_index, username)

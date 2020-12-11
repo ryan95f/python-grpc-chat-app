@@ -5,7 +5,17 @@ from src.client.frame.base import BaseChatFrame
 
 
 class ChatboxFrame(BaseChatFrame):
+    """Frame to accept a user's message and send to the chat server when send button is clicked"""
+
     def __init__(self, master, grpc_client, message_send_callback=None):
+        """ChatboxFrame constructor
+
+        Args:
+            master:                 The parent tk component. Either a frame or tkinter Tk.
+            grpc_client:            The grpc client wrapper to communicate with the server.
+            message_send_callback:  Callback function that is triggered once a message is
+                                    is sent to the server.
+        """
         super(ChatboxFrame, self).__init__(master, grpc_client)
         self._message_send_callback = message_send_callback
         self.__set_up_widgets()
@@ -28,7 +38,7 @@ class ChatboxFrame(BaseChatFrame):
         self.__clear_users_message_box()
 
         grpc_message = self.__construct_message_payload(message)
-        self.grpc_client.send_message(grpc_message)
+        self._grpc_client.send_message(grpc_message)
         if self._message_send_callback is not None:
             self._message_send_callback(message)
 
@@ -40,8 +50,8 @@ class ChatboxFrame(BaseChatFrame):
 
     def __construct_message_payload(self, message):
         return chat_pb2.ChatMessage(
-            userId=self.grpc_client.user_id,
-            username=self.grpc_client.username,
+            userId=self._grpc_client.user_id,
+            username=self._grpc_client.username,
             message=message
         )
 

@@ -12,7 +12,7 @@ class ChatApp(tk.Tk):
 
     def __init__(self):
         super(ChatApp, self).__init__()
-        self.title('grpc chat!')
+        self.title('Chat Application with gRPC!')
         self.grid()
         self.resizable(False, False)
 

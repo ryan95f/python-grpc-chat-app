@@ -1,3 +1,4 @@
+import logging
 import random
 import json
 import src.server.chat_pb2 as chat_pb2
@@ -6,6 +7,8 @@ from hashlib import md5
 
 
 class ChatService(chat_pb2_grpc.ChatServicer):
+    """Service to manage and distribute messages for a chat session"""
+
     def __init__(self):
         super(ChatService, self).__init__()
         self.chats = []
@@ -26,6 +29,7 @@ class ChatService(chat_pb2_grpc.ChatServicer):
         """
         user_id = random.randint(1, 10000)
         self.users[user_id] = request.username
+        logging.info(f'User {request.username} has connected')
         return chat_pb2.ChatUserConnected(username=request.username, userId=user_id)
 
     def disconnect(self, request, context):
@@ -40,6 +44,7 @@ class ChatService(chat_pb2_grpc.ChatServicer):
             isDisconnected property set to true
         """
         del self.users[request.userId]
+        logging.info(f'User {request.username} has disconnected')
         return chat_pb2.ChatUserDisconnect(isDisconnected=True)
 
     def sendMessage(self, request, context):

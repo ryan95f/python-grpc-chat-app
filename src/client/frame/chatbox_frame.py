@@ -1,6 +1,5 @@
 import tkinter as tk
 import src.server.chat_pb2 as chat_pb2
-from src.client.grpc_client import GrpcClient
 from src.client.frame.base import BaseChatFrame
 
 

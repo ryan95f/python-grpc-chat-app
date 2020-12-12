@@ -1,23 +1,24 @@
 import tkinter as tk
 from threading import Thread
-import src.client.grpc_client as client
+import src.client.chat_client as client
 
 import src.client.frame as frame
 import src.server.chat_pb2 as chat_pb2
 import src.server.chat_pb2_grpc as chat_pb2_grpc
 
 
-class Window(tk.Tk):
+class ChatApp(tk.Tk):
+    """Tkinter Chat application to send messages to other users"""
 
     def __init__(self):
-        super(Window, self).__init__()
+        super(ChatApp, self).__init__()
         self.title('grpc chat!')
         self.grid()
         self.resizable(False, False)
 
         self.__reciever_thread = None
         self.__active_user_thread = None
-        self.__client = client.GrpcClient()
+        self.__client = client.ChatClient()
         self.__setup_widgets()
 
     def __del__(self):

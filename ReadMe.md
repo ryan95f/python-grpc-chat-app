@@ -1,5 +1,7 @@
 # Python GRPC Chat App
 
+![Build Status](https://github.com/Ryan95Z/python-grpc-chat-app/workflows/Python%20application/badge.svg)
+
 A Python gRPC chat application using Tkinter.
 
 ## Requirements

@@ -52,7 +52,7 @@ python main.py
 To run all the unit tests in the project, use:
 
 ```
-make tests
+python -m unittest
 ```
 
 ## Coding Standards

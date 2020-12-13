@@ -60,7 +60,7 @@ class ChatService(chat_pb2_grpc.ChatServicer):
             and username from the user who send the message
         """
         self.chats.append(request)
-        return chat_pb2.ChatMessage(userId=request.userId, username=request.username)
+        return chat_pb2.ChatMessage(userId=request.userId, username=request.username, message=request.message)
 
     def subscribeMessages(self, request, context):
         """Endpoint to subscribe to new messages from different users on the chat server.

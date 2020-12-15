@@ -46,6 +46,9 @@ class ChatClient:
         Returns:
             boolean: True to indicate the disconnection was successful.
         """
+        if not self.is_connected:
+            return True
+
         self.__stub.disconnect(self.__user)
         self.__user = None
         self.__is_connected = False

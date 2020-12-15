@@ -67,3 +67,7 @@ def create_chat_message_object(user_id, username, message):
         raise ValueError("username cannot be empty or None")
 
     return chat_pb2.ChatMessage(userId=user_id, username=username, message=message)
+
+
+def create_chat_user_disconnected_object():
+    return chat_pb2.ChatUserDisconnect(isDisconnected=True)

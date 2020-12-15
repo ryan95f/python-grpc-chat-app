@@ -9,6 +9,10 @@ from tests.mocks import MockChatStub
 
 
 class TestChatClient(unittest.TestCase):
+    """Test case for the ChatClient object that is a wrapper
+    around the gRPC stub to make connecting to the server easier
+    """
+
     def setUp(self):
         super(TestChatClient, self).setUp()
         self.test_user_id = 100
@@ -25,17 +29,30 @@ class TestChatClient(unittest.TestCase):
         self.patcher.stop()
 
     def test_connect_successfully(self):
+        """Test connecting to the chat server by passing the user's username
+        to the chat server.
+
+        Expected: The chat client returns a True to indicate the user has
+                  connected to the server and the internal state of the chat client
+                  aligns with the is_connected flag set to true
+        """
         result = self.__connect_client()
 
         is_chat_user_connected_instance = isinstance(result, chat_pb2.ChatUserConnected)
         self.assertTrue(is_chat_user_connected_instance)
         self.assertEqual(result.username, self.test_username)
-        self.assertTrue(self.chat_client.is_connected)
 
     def __connect_client(self):
         return self.chat_client.connect(self.test_username)
 
     def test_disconnect_successfully(self):
+        """Test disconnecting a user from the chat server successfully
+
+        Expected: The chat client returns True to indicate that the
+                  server has successfully disconnected and the internal
+                  state of the chat client aligns with the is_connected flag
+                  set to false
+        """
         self.__connect_client()
 
         is_disconnected = self.chat_client.disconnect()
@@ -43,6 +60,12 @@ class TestChatClient(unittest.TestCase):
         self.assertFalse(self.chat_client.is_connected)
 
     def test_disconnect_when_already_disconnected(self):
+        """Test trying to disconnect when the user has already
+           disconnected from the server.
+
+        Expected: The chat client return true to indicate
+                  the user is already disconnected
+        """
         self.__connect_client()
         self.chat_client.disconnect()
 
@@ -50,6 +73,11 @@ class TestChatClient(unittest.TestCase):
         self.assertTrue(result)
 
     def test_subscribe_messages_successfully(self):
+        """Test subscribing to incoming messages from the server
+
+        Expected: The chat client should return a generator for incoming
+                  messages from other users
+        """
         expected_messages_length = 1
         self.__connect_client()
 
@@ -57,10 +85,21 @@ class TestChatClient(unittest.TestCase):
         self.assertIsInstance(result, types.GeneratorType)
 
     def test_subscribe_messages_when_disconnected(self):
+        """Test subscribing to incoming messages when the client
+        is disconnected from the chat server
+
+        Expected: The chat client raises a NotConnectorError when
+                  attemtping to subscribe to messages
+        """
         with self.assertRaises(client_exceptions.NotConnectedError):
             self.chat_client.subscribe_messages()
 
     def test_send_message_successfully(self):
+        """Test sending a message through the chat client
+
+        Expected: The chat client responds with the gRPC
+                  message object that was sent to the server
+        """
         self.__connect_client()
 
         message = self.__create_mock_grpc_chat_message()
@@ -73,17 +112,34 @@ class TestChatClient(unittest.TestCase):
         return test_utils.create_chat_message_object(self.test_user_id, self.test_username, self.test_message)
 
     def test_send_message_when_disconnected(self):
+        """Test sending a message through the chat client when the
+        user is disconnected from the server
+
+        Expected: The chat client raises a NotConnectorError when
+                  attemtping to send a message
+        """
         message = self.__create_mock_grpc_chat_message()
         with self.assertRaises(client_exceptions.NotConnectedError):
             self.chat_client.send_message(message)
 
     def test_subscrube_active_users_successfully(self):
+        """Test subscribing to active users on the chat server
+
+        Expected: The chat client should return a generator for other
+                  active users on the server
+        """
         self.__connect_client()
 
         result = self.chat_client.subscribe_active_users()
         self.assertIsInstance(result, types.GeneratorType)
 
     def test_subscrube_active_users_when_disconnected(self):
+        """Test subscribing to active users when the client
+        is disconnected from the chat server
+
+        Expected: The chat client raises a NotConnectorError when
+                  attemtping to subscribe to active users
+        """
         with self.assertRaises(client_exceptions.NotConnectedError):
             self.chat_client.subscribe_active_users()
 

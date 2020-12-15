@@ -19,7 +19,7 @@ class MockChatStub:
         yield test_utils.create_chat_message_object(self.MOCK_USER_ID, self.MOCK_USERNAME, self.MOCK_MESSAGE)
 
     def sendMessage(self, message):
-        return test_utils.create_chat_message_object(self.MOCK_USER_ID, self.MOCK_USERNAME, message)
+        return test_utils.create_chat_message_object(message.userId, message.username, message.message)
 
     def subscribeActiveUsers(self, active_user):
         yield test_utils.create_chat_active_user_object(self.MOCK_ACTIVE_USER_ID, self.MOCK_ACTIVE_USERNAME)

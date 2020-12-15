@@ -1,7 +1,9 @@
+import types
 import unittest
 import unittest.mock as mock
 import src.server.chat_pb2 as chat_pb2
 import src.client.chat_client as client
+import src.client.exceptions as client_exceptions
 import tests.utils as test_utils
 from tests.mocks import MockChatStub
 
@@ -12,6 +14,7 @@ class TestChatClient(unittest.TestCase):
         super(TestChatClient, self).setUp()
         self.test_user_id = 100
         self.test_username = 'Test'
+        self.test_message = 'Hello World'
 
     def test_connect_successfully(self, mock_stub):
         chat_client = client.ChatClient()
@@ -39,10 +42,17 @@ class TestChatClient(unittest.TestCase):
         self.assertTrue(result)
 
     def test_subscribe_messages_successfully(self, mock_stub):
-        pass
+        expected_messages_length = 1
+        chat_client = client.ChatClient()
+        chat_client.connect(self.test_username)
+
+        result = chat_client.subscribe_messages()
+        self.assertIsInstance(result, types.GeneratorType)
 
     def test_subscribe_messages_when_disconnected(self, mock_stub):
-        pass
+        chat_client = client.ChatClient()
+        with self.assertRaises(client_exceptions.NotConnectedError):
+            chat_client.subscribe_messages()
 
 
 if __name__ == '__main__':

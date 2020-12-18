@@ -2,7 +2,7 @@ import unittest
 import grpc
 import grpc_testing
 import src.server.chat_pb2 as chat_pb2
-import tests.utils as test_utils
+import tests.common as tests_common
 from src.server.chat_service import ChatService
 
 
@@ -31,7 +31,7 @@ class TestChatService(unittest.TestCase):
 
         Expected: An Ok response is returned where a user Id is generated
         """
-        request = test_utils.create_chat_user_object(self.test_username)
+        request = tests_common.create_chat_user_object(self.test_username)
 
         method = self.__invoke_unary_unary('connect', request)
 
@@ -54,7 +54,7 @@ class TestChatService(unittest.TestCase):
         Expected: An Ok response with isDisconnected equalling true
         """
         self.__add_active_user(self.test_user_id, self.test_username)
-        request = test_utils.create_chat_user_connected_object(self.test_user_id, self.test_username)
+        request = tests_common.create_chat_user_connected_object(self.test_user_id, self.test_username)
 
         method = self.__invoke_unary_unary('disconnect', request)
         response, metadata, code, details = method.termination()
@@ -69,7 +69,7 @@ class TestChatService(unittest.TestCase):
 
         Expected: An Ok response with the message being successfully returned
         """
-        request = test_utils.create_chat_message_object(self.test_user_id, self.test_username, self.test_message)
+        request = tests_common.create_chat_message_object(self.test_user_id, self.test_username, self.test_message)
 
         method = self.__invoke_unary_unary('sendMessage', request)
         response, metadata, code, details = method.termination()
@@ -83,9 +83,9 @@ class TestChatService(unittest.TestCase):
         """
         self.__add_active_user(self.test_user_id, self.test_username)
 
-        second_user_message = test_utils.create_chat_message_object(self.test_secondary_user_id,
-                                                                    self.test_secondary_username,
-                                                                    self.test_message)
+        second_user_message = tests_common.create_chat_message_object(self.test_secondary_user_id,
+                                                                      self.test_secondary_username,
+                                                                      self.test_message)
         self.__add_message_to_chat(second_user_message)
 
         request = chat_pb2.ChatUserConnected(userId=1, username='Test')
@@ -121,7 +121,7 @@ class TestChatService(unittest.TestCase):
         self.__add_active_user(self.test_user_id, self.test_username)
         self.__add_active_user(self.test_secondary_user_id, self.test_secondary_username)
 
-        request = test_utils.create_chat_user_connected_object(self.test_user_id, self.test_username)
+        request = tests_common.create_chat_user_connected_object(self.test_user_id, self.test_username)
         method = self.__invoke_unary_stream('subscribeActiveUsers', request)
 
         message = method.take_response()

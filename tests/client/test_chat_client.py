@@ -4,7 +4,7 @@ import unittest.mock as mock
 import src.server.chat_pb2 as chat_pb2
 import src.client.chat_client as client
 import src.client.exceptions as client_exceptions
-import tests.utils as test_utils
+import tests.common as tests_common
 from tests.mocks import MockChatStub
 
 
@@ -109,7 +109,7 @@ class TestChatClient(unittest.TestCase):
         self.assertEqual(result.message, message.message)
 
     def __create_mock_grpc_chat_message(self):
-        return test_utils.create_chat_message_object(self.test_user_id, self.test_username, self.test_message)
+        return tests_common.create_chat_message_object(self.test_user_id, self.test_username, self.test_message)
 
     def test_send_message_when_disconnected(self):
         """Test sending a message through the chat client when the

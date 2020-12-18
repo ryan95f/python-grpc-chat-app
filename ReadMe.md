@@ -36,7 +36,7 @@ This will do the following:
 To start the gRPC server:
 
 ```bash
-python server.py
+make server
 ```
 
 ## Running the chat client
@@ -44,7 +44,7 @@ python server.py
 To start the chat application:
 
 ```bash
-python main.py
+make client
 ```
 
 **Note**: You can create multiple instances of the client to simulate multiple users
@@ -53,8 +53,8 @@ python main.py
 
 To run all the unit tests in the project, use:
 
-```
-python -m unittest
+```bash
+make tests
 ```
 
 ## Coding Standards

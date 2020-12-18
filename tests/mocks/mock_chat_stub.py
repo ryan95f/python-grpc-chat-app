@@ -1,4 +1,4 @@
-import tests.utils as test_utils
+import tests.common as tests_common
 
 
 class MockChatStub:
@@ -20,7 +20,7 @@ class MockChatStub:
         Returns:
             A chat active user object
         """
-        return test_utils.create_chat_user_connected_object(self.MOCK_USER_ID, chat_user.username)
+        return tests_common.create_chat_user_connected_object(self.MOCK_USER_ID, chat_user.username)
 
     def disconnect(self, active_user):
         """Mock disconnecting from the server
@@ -31,7 +31,7 @@ class MockChatStub:
         Returns:
             A chat user disconnected object with isDisconnected set to true
         """
-        return test_utils.create_chat_user_disconnected_object()
+        return tests_common.create_chat_user_disconnected_object()
 
     def subscribeMessages(self, active_user):
         """Mock subscribing to messages from other users on the server
@@ -42,7 +42,7 @@ class MockChatStub:
         Args:
             Generator that contains a single chat message object
         """
-        yield test_utils.create_chat_message_object(self.MOCK_USER_ID, self.MOCK_USERNAME, self.MOCK_MESSAGE)
+        yield tests_common.create_chat_message_object(self.MOCK_USER_ID, self.MOCK_USERNAME, self.MOCK_MESSAGE)
 
     def sendMessage(self, message):
         """Mock sending a message to the chat server
@@ -54,7 +54,7 @@ class MockChatStub:
             The chat message object that was send to the server.
             Indicating the message was recieved
         """
-        return test_utils.create_chat_message_object(message.userId, message.username, message.message)
+        return tests_common.create_chat_message_object(message.userId, message.username, message.message)
 
     def subscribeActiveUsers(self, active_user):
         """Mock subscribing to other active users on the server
@@ -65,4 +65,4 @@ class MockChatStub:
         Returns:
             Generator that contains a single active user object
         """
-        yield test_utils.create_chat_active_user_object(self.MOCK_ACTIVE_USER_ID, self.MOCK_ACTIVE_USERNAME)
+        yield tests_common.create_chat_active_user_object(self.MOCK_ACTIVE_USER_ID, self.MOCK_ACTIVE_USERNAME)

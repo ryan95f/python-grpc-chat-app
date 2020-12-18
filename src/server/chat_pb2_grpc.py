@@ -26,7 +26,7 @@ class ChatStub(object):
                 )
         self.sendMessage = channel.unary_unary(
                 '/Chat/sendMessage',
-                request_serializer=src_dot_server_dot_chat__pb2.ChatUserConnected.SerializeToString,
+                request_serializer=src_dot_server_dot_chat__pb2.ChatMessage.SerializeToString,
                 response_deserializer=src_dot_server_dot_chat__pb2.ChatMessage.FromString,
                 )
         self.subscribeMessages = channel.unary_stream(
@@ -89,7 +89,7 @@ def add_ChatServicer_to_server(servicer, server):
             ),
             'sendMessage': grpc.unary_unary_rpc_method_handler(
                     servicer.sendMessage,
-                    request_deserializer=src_dot_server_dot_chat__pb2.ChatUserConnected.FromString,
+                    request_deserializer=src_dot_server_dot_chat__pb2.ChatMessage.FromString,
                     response_serializer=src_dot_server_dot_chat__pb2.ChatMessage.SerializeToString,
             ),
             'subscribeMessages': grpc.unary_stream_rpc_method_handler(
@@ -158,7 +158,7 @@ class Chat(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Chat/sendMessage',
-            src_dot_server_dot_chat__pb2.ChatUserConnected.SerializeToString,
+            src_dot_server_dot_chat__pb2.ChatMessage.SerializeToString,
             src_dot_server_dot_chat__pb2.ChatMessage.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

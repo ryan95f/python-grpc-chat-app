@@ -4,8 +4,6 @@ all: lint tests
 
 .PHONY: init 
 init:
-	${PYTHON} -m venv env
-	source env/bin/activate
 	pip install -r requirements.txt
 
 .PHONY: lint
@@ -15,6 +13,7 @@ lint:
 .PHONY: tests
 tests:
 	coverage run -m unittest
+	coverage html
 	coverage report
 
 .PHONY: protoc
@@ -28,3 +27,8 @@ server:
 .PHONY: client
 client:
 	${PYTHON} main.py
+
+.PHONY: clean
+clean:
+	rm -r htmlcov
+	rm .coverage

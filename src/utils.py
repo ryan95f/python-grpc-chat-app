@@ -37,5 +37,8 @@ def get_server_config_from_yaml(yaml_data):
         A tuple where the first item is the server host
         and the second item is the port number
     """
+    if (yaml_data is None) or (not isinstance(yaml_data, dict)):
+        raise ValueError('Yaml data needs to be a dict type!')
+
     server_config = yaml_data['server']
     return server_config['host'], server_config['port']

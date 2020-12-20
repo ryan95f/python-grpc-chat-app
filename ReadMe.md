@@ -1,4 +1,4 @@
-# Python GRPC Chat App
+# Python gRPC Chat App
 
 ![Build Status](https://github.com/Ryan95Z/python-grpc-chat-app/workflows/build/badge.svg)
 
@@ -39,7 +39,7 @@ make init
 
 ## Running the server
 
-To start the gRPC server:
+To start the chat server:
 
 ```bash
 make server
@@ -47,13 +47,24 @@ make server
 
 ## Running the chat client
 
-To start the chat application:
+To start the chat client application:
 
 ```bash
 make client
 ```
 
 **Note**: You can create multiple instances of the client to simulate multiple users
+
+## Compiling the Protocol Buffers
+
+To compile the protocol buffers found in the `protos/` directory, run:
+
+```bash
+make protoc
+```
+
+This will output two Python files called `chat_pb2.py` and `chat_pb2_grpc.py`. These files will be located in the `src/server/` package.
+
 
 ## Unit Tests
 
@@ -65,7 +76,7 @@ make tests
 
 ## Coding Standards
 
-This project follows the [PEP 8](https://www.python.org/dev/peps/pep-0008/) Python coding standard. In order to validate the code against PEP 8, run the pycodestyle tool. This can be executed with:
+This project follows the [PEP 8](https://www.python.org/dev/peps/pep-0008/) Python coding standard. In order to validate the code against PEP 8, run the `pycodestyle` tool. This can be executed with:
 
 ```bash
 make lint

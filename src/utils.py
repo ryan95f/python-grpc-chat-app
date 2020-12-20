@@ -13,6 +13,10 @@ def read_yaml_config(yaml_file_path):
 
     Returns:
         The yaml data contained within the file
+
+    Rasies:
+        ValueError: When the provided file path does not
+                    have a `.yaml` extension or is None.
     """
     if yaml_file_path is None:
         raise ValueError('Yaml file path cannot be none!')
@@ -36,6 +40,11 @@ def get_server_config_from_yaml(yaml_data):
     Returns:
         A tuple where the first item is the server host
         and the second item is the port number
+
+    Raises:
+        ValueError: If the yaml data is not in a dictionary format
+        KeyError:   If any of the expected keys is missing. Indicating
+                    the yaml is malformed.
     """
     if (yaml_data is None) or (not isinstance(yaml_data, dict)):
         raise ValueError('Yaml data needs to be a dict type!')

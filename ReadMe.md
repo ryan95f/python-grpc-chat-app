@@ -19,24 +19,30 @@ To set up the environment, ensure the virtualenv package has been installed. Thi
 pip install virtualenv
 ```
 
-Once virtualenv has been installed. Use the `Makefile` to  install the relevant dependencies for the application:
+Once virtualenv has been installed. Create the virutal environment for the application:
+
+```bash
+python -m venv env
+```
+
+Then activate the virtual environment:
+
+```bash
+source env/bin/activate
+```
+
+Finally use the `Makefile` to  install the relevant dependencies for the application:
 
 ```bash
 make init
 ```
-
-This will do the following:
-
-* Create the Python virtual environment
-* Activate the virtual environment
-* Install the relevant packages
 
 ## Running the server
 
 To start the gRPC server:
 
 ```bash
-python server.py
+make server
 ```
 
 ## Running the chat client
@@ -44,7 +50,7 @@ python server.py
 To start the chat application:
 
 ```bash
-python main.py
+make client
 ```
 
 **Note**: You can create multiple instances of the client to simulate multiple users
@@ -53,8 +59,8 @@ python main.py
 
 To run all the unit tests in the project, use:
 
-```
-python -m unittest
+```bash
+make tests
 ```
 
 ## Coding Standards

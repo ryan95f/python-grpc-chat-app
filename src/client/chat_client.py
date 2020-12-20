@@ -1,17 +1,25 @@
 import grpc
+import src.utils as utils
 import src.server.chat_pb2 as chat_pb2
 import src.server.chat_pb2_grpc as chat_pb2_grpc
 import src.client.exceptions as client_exceptions
+
+YAML_CONFIG_PATH = './config.yaml'
 
 
 class ChatClient:
     """Wrapper class to interact with the grpc chat server"""
 
     def __init__(self):
-        self.__channel = grpc.insecure_channel('localhost:50051')
+        server_host, server_port = self.__get_server_config_from_file()
+        self.__channel = grpc.insecure_channel(f'{server_host}:{server_port}')
         self.__stub = chat_pb2_grpc.ChatStub(self.__channel)
         self.__user = None
         self.__is_connected = False
+
+    def __get_server_config_from_file(self):
+        yaml_config = utils.read_yaml_config(YAML_CONFIG_PATH)
+        return utils.get_server_config_from_yaml(yaml_config)
 
     @property
     def is_connected(self):
@@ -46,6 +54,9 @@ class ChatClient:
         Returns:
             boolean: True to indicate the disconnection was successful.
         """
+        if not self.is_connected:
+            return True
+
         self.__stub.disconnect(self.__user)
         self.__user = None
         self.__is_connected = False

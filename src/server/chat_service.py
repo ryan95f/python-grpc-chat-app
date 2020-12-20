@@ -29,7 +29,7 @@ class ChatService(chat_pb2_grpc.ChatServicer):
         """
         user_id = random.randint(1, 10000)
         self.users[user_id] = request.username
-        logging.info(f'User {request.username} has connected')
+        logging.info(f'User {user_id} has connected')
         return chat_pb2.ChatUserConnected(username=request.username, userId=user_id)
 
     def disconnect(self, request, context):
@@ -44,7 +44,7 @@ class ChatService(chat_pb2_grpc.ChatServicer):
             isDisconnected property set to true
         """
         del self.users[request.userId]
-        logging.info(f'User {request.username} has disconnected')
+        logging.info(f'User {request.userId} has disconnected')
         return chat_pb2.ChatUserDisconnect(isDisconnected=True)
 
     def sendMessage(self, request, context):
@@ -59,6 +59,7 @@ class ChatService(chat_pb2_grpc.ChatServicer):
             A grpc ChatMessage object with the user Id
             and username from the user who send the message
         """
+        logging.info(f'User {request.userId} has sent a message')
         self.chats.append(request)
         return chat_pb2.ChatMessage(userId=request.userId, username=request.username, message=request.message)
 
@@ -75,6 +76,7 @@ class ChatService(chat_pb2_grpc.ChatServicer):
         current_user_id = request.userId
         last_seen_message_index = 0
 
+        logging.info(f'User {request.userId} has subscribed to incoming messages')
         while not self.stop_connection and self.__is_user_still_connected(current_user_id):
             while len(self.chats) > last_seen_message_index:
                 message = self.chats[last_seen_message_index]
@@ -97,6 +99,8 @@ class ChatService(chat_pb2_grpc.ChatServicer):
         """
         current_hash = ""
         current_user_id = request.userId
+
+        logging.info(f'User {request.userId} has subscribed to active users')
 
         while not self.stop_connection and self.__is_user_still_connected(current_user_id):
             json_users = json.dumps(self.users)

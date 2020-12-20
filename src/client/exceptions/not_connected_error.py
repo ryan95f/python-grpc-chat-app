@@ -1,2 +1,0 @@
-class NotConnectedError(RuntimeError):
-    pass

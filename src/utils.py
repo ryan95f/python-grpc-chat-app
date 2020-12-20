@@ -1,7 +1,7 @@
 import re
 import yaml
 
-_YAML_REGEX = re.compile(r'\w+.yaml')
+_YAML_FILE_EXTENSION_REGEX = re.compile(r'\w+.yaml')
 
 
 def read_yaml_config(yaml_file_path):
@@ -21,7 +21,7 @@ def read_yaml_config(yaml_file_path):
     if yaml_file_path is None:
         raise ValueError('Yaml file path cannot be none!')
 
-    is_yaml_file = _YAML_REGEX.search(yaml_file_path)
+    is_yaml_file = _YAML_FILE_EXTENSION_REGEX.search(yaml_file_path)
 
     if is_yaml_file is None:
         raise ValueError(f'{yaml_file_path} is not a yaml file!')

@@ -6,6 +6,13 @@ from src.client.frame.base import BaseChatFrame
 class ChatboxFrame(BaseChatFrame):
     """Frame to accept a user's message and send to the chat server when send button is clicked"""
 
+    __SEND_BUTTON_HEIGHT = 5
+    __SEND_BUTTON_WIDTH = 20
+    __SEND_BUTTON_TXT = 'Send'
+
+    __CHAT_MSG_BOX_TEXT_START_INDEX = '1.0'
+    __CHAT_MSG_BOX_TEXT_END_INDEX = 'end-1c'
+
     def __init__(self, master, grpc_client, message_send_callback=None):
         """ChatboxFrame constructor
 
@@ -28,7 +35,11 @@ class ChatboxFrame(BaseChatFrame):
         self.chat_box.grid(row=0, column=0, columnspan=3)
 
     def __set_up_chat_send_btn_widget(self):
-        self.send_btn = tk.Button(self, text='Send', height=5, width=20, command=self.__btn_action_send_message)
+        self.send_btn = tk.Button(self,
+                                  text=self.__SEND_BUTTON_TXT,
+                                  height=self.__SEND_BUTTON_HEIGHT,
+                                  width=self.__SEND_BUTTON_WIDTH,
+                                  command=self.__btn_action_send_message)
         self.send_btn.grid(row=0, column=4, columnspan=2, sticky=tk.EW)
         self.disable_send_btn()
 
@@ -42,10 +53,10 @@ class ChatboxFrame(BaseChatFrame):
             self._message_send_callback(message)
 
     def __get_users_message(self):
-        return self.chat_box.get('1.0', 'end-1c')
+        return self.chat_box.get(self.__CHAT_MSG_BOX_TEXT_START_INDEX, self.__CHAT_MSG_BOX_TEXT_END_INDEX)
 
     def __clear_users_message_box(self):
-        self.chat_box.delete('1.0', 'end-1c')
+        self.chat_box.delete(self.__CHAT_MSG_BOX_TEXT_START_INDEX, self.__CHAT_MSG_BOX_TEXT_END_INDEX)
 
     def __construct_message_payload(self, message):
         return chat_pb2.ChatMessage(

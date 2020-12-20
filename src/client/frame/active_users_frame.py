@@ -5,6 +5,10 @@ from src.client.frame.base import BaseChatFrame
 class ActiveUsersFrame(tk.Frame):
     """Frame to list the active users in the chat session"""
 
+    __ACTIVE_USER_LIST_WIDTH = 21
+    __ACTIVE_USER_LIST_HEIGHT = 18
+    __ACTIVE_USER_BORDER_SIZE = 0
+
     def __init__(self, master):
         """ActiveUsersFrame constructor
 
@@ -18,7 +22,10 @@ class ActiveUsersFrame(tk.Frame):
         self.__active_user_label = tk.Label(self, text='Active Users')
         self.__active_user_label.pack()
 
-        self.__active_users_list = tk.Listbox(self, bd=0, height=18, width=21)
+        self.__active_users_list = tk.Listbox(self,
+                                              bd=self.__ACTIVE_USER_BORDER_SIZE,
+                                              height=self.__ACTIVE_USER_LIST_HEIGHT,
+                                              width=self.__ACTIVE_USER_LIST_WIDTH)
         self.__active_users_list.pack()
 
     def clear_active_user_list(self):

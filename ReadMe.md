@@ -65,7 +65,6 @@ make protoc
 
 This will output two Python files called `chat_pb2.py` and `chat_pb2_grpc.py`. These files will be located in the `src/server/` package.
 
-
 ## Unit Tests
 
 To run all the unit tests in the project, use:

@@ -1,7 +1,7 @@
 coverage==6.4.1
-grpcio==1.46.3
-grpcio-testing==1.46.3
-grpcio-tools==1.46.3
+grpcio==1.51.1
+grpcio-testing==1.51.1
+grpcio-tools==1.51.1
 protobuf==4.21.12
 pycodestyle==2.8.0
 six==1.16.0
